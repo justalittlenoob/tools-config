@@ -1,0 +1,5 @@
+(setq user-init-file "C:/Users/pengfei1/OneDrive - Intel Corporation/Desktop/manuscript/_emacs/.emacs")
+(setq user-emacs-directory "C:/Users/pengfei1/OneDrive - Intel Corporation/Desktop/manuscript/_emacs/.emacs.d/")
+(setq default-directory "C:/Users/pengfei1/OneDrive - Intel Corporation/Desktop/manuscript/_emacs")
+(setenv "HOME" "C:/Users/pengfei1/OneDrive - Intel Corporation/Desktop/manuscript/_emacs")
+(load user-init-file)

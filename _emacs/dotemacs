@@ -1,0 +1,147 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(custom-safe-themes
+   '("f5b6be56c9de9fd8bdd42e0c05fecb002dedb8f48a5f00e769370e4517dde0e8" "fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" default))
+ '(global-display-line-numbers-mode t)
+ '(show-paren-mode t)
+ '(tab-bar-mode t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+ 
+;;
+;; plugins
+;;
+
+;; using neotree
+(add-to-list 'load-path "plugin/emacs-neotree-dev")
+(require 'neotree)
+(global-set-key [f12] 'neotree-toggle)
+
+;; TODO: color theme
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+(add-to-list 'custom-theme-load-path
+             (file-name-as-directory
+              (expand-file-name ".emacs.d/themes/solarized-emacs-master")))
+(load-theme 'misterioso t)
+
+
+
+;; TODO: use cedet. 
+(require 'cedet)
+(semantic-mode 1)
+(require 'semantic/ia)
+
+;;
+;; advance settings
+;;
+
+;; using % to match bracks, which is like vim
+(global-set-key "%" 'match-paren)          
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+	((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+	(t (self-insert-command (or arg 1)))))
+
+;; set temp mark. C-. mark; c-, goto the mark
+(global-set-key [(control ?\.)] 'ska-point-to-register)
+(global-set-key [(control ?\,)] 'ska-jump-to-register)
+(defun ska-point-to-register()
+  "Store cursorposition _fast_ in a register. 
+Use ska-jump-to-register to jump back to the stored 
+position."
+  (interactive)
+  (setq zmacs-region-stays t)
+  (point-to-register 8))
+
+(defun ska-jump-to-register()
+  "Switches between current cursorposition and position
+that was stored with ska-point-to-register."
+  (interactive)
+  (setq zmacs-region-stays t)
+  (let ((tmp (point-marker)))
+        (jump-to-register 8)
+        (set-register 8 tmp)))
+
+;; code folding
+(global-set-key (kbd "<f5>") 'set-selective-display-dlw)
+
+(defun set-selective-display-dlw (&optional level)
+"Fold text indented same of more than the cursor.
+If level is set, set the indent level to LEVEL.
+If 'selective-display' is already set to LEVEL, clicking
+F5 again will unset 'selective-display' by setting it to 0."
+  (interactive "P")
+  (if (eq selective-display (1+ (current-column)))
+      (set-selective-display 0)
+    (set-selective-display (or level (1+ (current-column))))))
+
+;; how to use grep in windows
+;; 1. install grep for windows version(http://gnuwin32.sourceforge.net/packages/grep.htm)
+;; 2. change env variables, e.g. :  setx path "%path%;C:\Program Files\GnuWin32\bin"	
+;; 3. using grep in emacs: 3.1 M-x grep 3.2 "keyword" * RET
+
+;;
+;; basic settings
+;;
+
+;; start frame with max size
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+ 
+;; hide tool bar
+(tool-bar-mode -1)
+ 
+;; hide menu bar
+(menu-bar-mode -1)
+
+;; turn off alert
+(setq visible-bell t)
+
+;; set colum number
+(setq column-number-mode t) 
+	  
+;; scroll screen before 3 lines
+(setq scroll-margin 3
+      scroll-conservatively 10000)
+
+;; set default mode to text mode
+(setq default-major-mode 'text-mode)
+
+;; only display the other parenthess, don't jump to it
+(show-paren-mode t)
+(setq show-paren-style 'parentheses)
+
+;; avoid mouse anchor
+(mouse-avoidance-mode 'animate)
+
+;; set frame title to meanfull name
+(setq frame-title-format "emacs@%b")
+
+;; enable open picture
+(auto-image-file-mode)
+
+;; gramma high light
+(global-font-lock-mode t)
+
+;; self information
+(setq user-full-name "Zhao Pengfei")
+(setq user-mail-address "pengfei.zhao@intel.com")
+
+;; copy and delete directory recursivly
+(setq dired-recursive-copies 'top)
+(setq dired-recursive-deletes 'top)
+
+;; no backup file
+(setq make-backup-files nil)
